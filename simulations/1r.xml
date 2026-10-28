@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DroneRoadSystem>
+    <radius value="10"/>
+    <Road id="road_one">
+        <controlPoints type="Bezier" n="101">
+            <point coord="(0,500,100)"/>
+            <point coord="(1200,500,100)"/>
+        </controlPoints>
+        <lane i='0' j='0'>
+            <openInterval start='0' close='1' />
+        </lane>
+        <lane i='1' j='0'>
+            <openInterval start='0' close='1' />
+        </lane>
+        <lane i='-1' j='0'>
+            <openInterval start='0' close='1' />
+        </lane>
+        <lane i='1' j='-1'>
+            <openInterval start='0' close='1' />
+        </lane>        
+        <lane i='-1' j='1'>
+            <openInterval start='0' close='1' />
+        </lane>                  
+        <lane i='0' j='1'>
+            <openInterval start='0' close='1' />
+        </lane>
+        <lane i='0' j='-1'>
+            <openInterval start='0' close='1'/>
+        </lane>
+        <laneInfo>
+            <lane i="1" j="0" info="0-1"/>
+            <lane i="-1" j="0" info="0-1"/>
+            <lane i="0" j="-1" info="0-1"/>
+            <lane i="0" j="1" info="0-1"/>
+            <lane i="1" j="-1" info="0-1"/>
+            <lane i="-1" j="1" info="0-1"/>
+            <lane i="0" j="0" info="0-1"/>
+        </laneInfo>       
+    </Road>
+</DroneRoadSystem>
+
+
+
+
+

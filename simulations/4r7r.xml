@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DroneRoadSystem>
+    <radius value="10"/>
+    <Road id="road_one">
+        <controlPoints type="Bezier" n="101">
+            <point coord="(0,500,100)"/>
+            <point coord="(1200,500,100)"/>
+        </controlPoints>
+        <lane i='0' j='0'>
+            <openInterval start='0' close='1' />
+        </lane>
+        <lane i='1' j='0'>
+            <openInterval start='0' close='1' />
+        </lane>
+        <lane i='-1' j='0'>
+            <openInterval start='0' close='1' />
+        </lane>
+        <lane i='1' j='-1'>
+            <openInterval start='0' close='1' />
+        </lane>        
+        <lane i='-1' j='1'>
+            <openInterval start='0' close='1' />
+        </lane>                  
+        <lane i='0' j='1'>
+            <openInterval start='0.04' close='0.19' />
+            <openInterval start='0.64' close='0.81' />
+        </lane>
+        <lane i='0' j='-1'>
+            <openInterval start='0.32' close='0.51' inter='0.40'/>
+        </lane>
+        <laneInfo>
+            <lane i="1" j="0" info="0-1"/>
+            <lane i="-1" j="0" info="0-1"/>
+            <lane i="0" j="-1" info="0.32-0.51"/>
+            <lane i="0" j="1" info="0.04-0.19,0.64-0.81"/>
+            <lane i="1" j="-1" info="0-1"/>
+            <lane i="-1" j="1" info="0-1"/>
+            <lane i="0" j="0" info="0-1"/>
+        </laneInfo>       
+    </Road>
+    <Road id="road_two">
+        <controlPoints type="Bezier" n="101">
+            <point coord="(666,0,200)"/>
+            <point coord="(666,1200,200)"/>
+        </controlPoints>
+        <lane i='0' j='0'>
+            <openInterval start='0' close='1' />
+        </lane>
+        <lane i='1' j='0'>
+            <openInterval start='0' close='1' />
+        </lane>
+        <lane i='-1' j='0'>
+            <openInterval start='0' close='1' />
+        </lane>
+        <lane i='1' j='-1'>
+            <openInterval start='0' close='1' />
+        </lane>        
+        <lane i='-1' j='1'>
+            <openInterval start='0' close='1' />
+        </lane>           
+        <lane i='0' j='1'>
+            <openInterval start='0.18' close='0.33' />
+            <openInterval start='0.69' close='0.88' />
+        </lane>
+        <lane i='0' j='-1'>
+            <openInterval start='0.43' close='0.70' inter='0.53'/>
+        </lane>
+        <laneInfo>
+            <lane i="1" j="0" info="0-1"/>
+            <lane i="-1" j="0" info="0-1"/>
+            <lane i="0" j="-1" info="0.43-0.70"/>
+            <lane i="0" j="1" info="0.18-0.33,0.69-0.88"/>
+            <lane i="1" j="-1" info="0-1"/>
+            <lane i="-1" j="1" info="0-1"/>
+            <lane i="0" j="0" info="0-1"/>
+        </laneInfo>  
+    </Road>
+    <Road id="road_three">
+        <controlPoints type="Bezier" n="101">
+            <point coord="(1200,1000,150)"/>
+            <point coord="(1150,1000,100)"/>
+            <point coord="(1050,1000,100)"/>
+            <point coord="(990,1000,100)"/>
+            <point coord="(1000,990,100)"/>
+            <point coord="(1000,900,100)"/>
+            <point coord="(1000,810,100)"/>
+            <point coord="(1000,800,100)"/>
+            <point coord="(900,800,100)"/>
+            <point coord="(0,800,100)"/>
+        </controlPoints>
+        <lane i='0' j='0'>
+            <openInterval start='0' close='1' />
+        </lane>
+        <lane i='1' j='0'>
+            <openInterval start='0' close='1' />
+        </lane>
+        <lane i='-1' j='0'>
+            <openInterval start='0' close='1' />
+        </lane>
+        <lane i='1' j='-1'>
+            <openInterval start='0' close='1' />
+        </lane>        
+        <lane i='-1' j='1'>
+            <openInterval start='0' close='1' />
+        </lane>           
+        <lane i='0' j='1'>
+            <openInterval start='0.5' close='0.85' />
+        </lane>
+        <lane i='0' j='-1'>
+            <openInterval start='0.87' close='0.95' inter='0.9'/>
+        </lane>
+        <laneInfo>
+            <lane i="1" j="0" info="0-1"/>
+            <lane i="-1" j="0" info="0-1"/>
+            <lane i="0" j="-1" info="0.87-0.95"/>
+            <lane i="0" j="1" info="0.5-0.85"/>
+            <lane i="1" j="-1" info="0-1"/>
+            <lane i="-1" j="1" info="0-1"/>
+            <lane i="0" j="0" info="0-1"/>
+        </laneInfo>  
+    </Road>
+    <Road id="road_four">
+        <tier value="1"/>
+        <controlPoints type="Bezier" n="51">
+            <point coord="(0,1000,200)"/>
+            <point coord="(100,1000,200)"/>
+            <point coord="(300,1000,200)"/>
+            <point coord="(333,1000,200)"/>
+            <point coord="(333,900,200)"/>
+            <point coord="(333,800,200)"/>
+        </controlPoints>
+
+        <controlPoints type="Bezier" n="51">
+            <point coord="(333,800,200)"/>
+            <point coord="(333,0,200)"/> 
+        </controlPoints>
+        <lane i='0' j='0'>
+            <openInterval start='0' close='1' />
+        </lane>
+        <lane i='1' j='0'>
+            <openInterval start='0' close='1' />
+        </lane>
+        <lane i='-1' j='0'>
+            <openInterval start='0' close='1' />
+        </lane>
+        <lane i='1' j='-1'>
+            <openInterval start='0' close='1' />
+        </lane>        
+        <lane i='-1' j='1'>
+            <openInterval start='0' close='1' />
+        </lane>           
+        <lane i='0' j='1'>
+            <openInterval start='0.77' close='0.93' />
+        </lane>
+        <lane i='0' j='-1'>
+            <openInterval start='0.29' close='0.43'/>
+            <openInterval start='0.55' close='0.71' inter='0.58'/>
+        </lane>
+        <laneInfo>
+            <lane i="1" j="0" info="0-1"/>
+            <lane i="-1" j="0" info="0-1"/>
+            <lane i="0" j="-1" info="0.29-0.43,0.55-0.71"/>
+            <lane i="0" j="1" info="0.77-0.93"/>
+            <lane i="1" j="-1" info="0-1"/>
+            <lane i="-1" j="1" info="0-1"/>
+            <lane i="0" j="0" info="0-1"/>
+        </laneInfo>  
+    </Road>
+
+
+    <Ramp id="two_in_one_out">
+        <connectedPart type="in">
+            <roadID value="road_two"/>
+            <i value="0"/>
+            <j value="1"/>
+            <t value="0.33"/>
+        </connectedPart>
+        <connectedPart type="out">
+            <roadID value="road_one"/>
+            <i value="0"/>
+            <j value="1"/>
+            <t value="0.64"/>
+        </connectedPart>
+        <controlPoints type="Bezier" n="101">
+            <point coord="(671,396,208.66025404)"/>
+            <point coord="(700,470,208)"/>
+            <point coord="(768,495,108.66025404)"/>
+        </controlPoints>
+    </Ramp>
+    <Ramp id="three_in_two_out">
+        <connectedPart type="out">
+            <roadID value="road_two"/>
+            <i value="0"/>
+            <j value="1"/>
+            <t value="0.69"/>
+        </connectedPart>
+        <connectedPart type="in">
+            <roadID value="road_three"/>
+            <i value="0"/>
+            <j value="1"/>
+            <t value="0.82"/>
+        </connectedPart>
+        <controlPoints type="Bezier" n="101">
+            <point coord="(798.82453356,814.47337088,108.2128233)"/>
+            <point coord="(700,820,208)"/>
+            <point coord="(671,828,208.66025404)"/>
+        </controlPoints>
+    </Ramp>
+    <Ramp id="two_in_three_out">
+        <connectedPart type="in">
+            <roadID value="road_two"/>
+            <i value="0"/>
+            <j value="-1"/>
+            <t value="0.58"/>
+        </connectedPart>
+        <connectedPart type="out">
+            <roadID value="road_three"/>
+            <i value="0"/>
+            <j value="-1"/>
+            <t value="0.89"/>
+        </connectedPart>
+        <controlPoints type="Bezier" n="101">
+            <point coord="(661,696,191.33974596)"/>
+            <point coord="(640,750,91)"/>
+            <point coord="(610.75855973,796.14525111,91.78718671)"/>
+        </controlPoints>
+    </Ramp>
+    <Ramp id="one_in_two_out">
+        <connectedPart type="out">
+            <roadID value="road_two"/>
+            <i value="0"/>
+            <j value="-1"/>
+            <t value="0.5"/>
+        </connectedPart>
+        <connectedPart type="in">
+            <roadID value="road_one"/>
+            <i value="0"/>
+            <j value="-1"/>
+            <t value="0.47"/>
+        </connectedPart>
+        <controlPoints type="Bezier" n="101">
+            <point coord="(564,505,91.33974596)"/>
+            <point coord="(640,580,91)"/>
+            <point coord="(661,600,191.33974596)"/>
+        </controlPoints>
+    </Ramp>
+    <Ramp id="four_in_one_out">
+        <connectedPart type="in">
+            <roadID value="road_four"/>
+            <i value="0"/>
+            <j value="-1"/>
+            <t value="0.62"/>
+        </connectedPart>
+        <connectedPart type="out">
+            <roadID value="road_one"/>
+            <i value="0"/>
+            <j value="-1"/>
+            <t value="0.35"/>
+        </connectedPart>
+        <controlPoints type="Bezier" n="101">
+            <point coord="(338,608,191.33974596)"/>
+            <point coord="(360,550,91)"/>
+            <point coord="(420,505,91.33974596)"/>
+        </controlPoints>
+    </Ramp>
+    <Ramp id="one_in_four_out">
+        <connectedPart type="out">
+            <roadID value="road_four"/>
+            <i value="0"/>
+            <j value="1"/>
+            <t value="0.77"/>
+        </connectedPart>
+        <connectedPart type="in">
+            <roadID value="road_one"/>
+            <i value="0"/>
+            <j value="1"/>
+            <t value="0.19"/>
+        </connectedPart>
+        <controlPoints type="Bezier" n="101">
+            <point coord="(228,495,108.66025404)"/>
+            <point coord="(310,500,208)"/>
+            <point coord="(328,368,208.66025404)"/>
+        </controlPoints>
+    </Ramp>
+
+
+    <Ramp id="four_out">
+        <connectedPart type="in">
+            <roadID value="road_four"/>
+            <i value="0"/>
+            <j value="1"/>
+            <t value="0.9"/>
+        </connectedPart>
+        <controlPoints type="Bezier" n="101">
+            <point coord="(328,160,208.66025404)"/>
+            <point coord="(300,65,205)"/>
+            <point coord="(187,52,205)"/>
+        </controlPoints>
+    </Ramp>
+    <Ramp id="four_in">
+        <connectedPart type="out">
+            <roadID value="road_four"/>
+            <i value="0"/>
+            <j value="-1"/>
+            <t value="0.29"/>
+        </connectedPart>
+        <controlPoints type="Bezier" n="101">
+            <point coord="(302.73429798,1150,191.33974596)"/>
+            <point coord="(302.73429798,966.83198639,191.33974596)"/>
+        </controlPoints>
+    </Ramp>
+</DroneRoadSystem>
+
+
+
+
+

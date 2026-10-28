@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DroneRoadSystem>
+    <radius value="10"/>
+    <Road id="road_one">
+        <controlPoints type="Bezier" n="101">
+            <point coord="(0,500,100)"/>
+            <point coord="(1000,500,100)"/>
+        </controlPoints>
+        <lane i='0' j='0'>
+            <openInterval start='0' close='1' />
+        </lane>
+        <lane i='1' j='0'>
+            <openInterval start='0' close='1' />
+        </lane>
+        <lane i='-1' j='0'>
+            <openInterval start='0' close='1' />
+        </lane>
+        <lane i='1' j='-1'>
+            <openInterval start='0' close='1' />
+        </lane>        
+        <lane i='-1' j='1'>
+            <openInterval start='0' close='1' />
+        </lane>                  
+        <lane i='0' j='1'>
+            <openInterval start='0' close='1' />
+        </lane>
+        <lane i='0' j='-1'>
+            <openInterval start='0' close='1'/>
+        </lane>
+        <lane i='0' j='2'>
+            <openInterval start='0' close='1'/>
+        </lane>
+        <lane i='2' j='0'>
+            <openInterval start='0' close='1'/>
+        </lane>
+        <lane i='0' j='-2'>
+            <openInterval start='0' close='1'/>
+        </lane>
+        <lane i='-2' j='0'>
+            <openInterval start='0' close='1'/>
+        </lane>
+        <lane i='1' j='1'>
+            <openInterval start='0' close='1'/>
+        </lane>
+        <lane i='-1' j='-1'>
+            <openInterval start='0' close='1'/>
+        </lane>
+        <lane i='-2' j='2'>
+            <openInterval start='0' close='1'/>
+        </lane>
+        <lane i='-1' j='2'>
+            <openInterval start='0' close='1'/>
+        </lane>
+        <lane i='-2' j='1'>
+            <openInterval start='0' close='1'/>
+        </lane>
+        <lane i='2' j='-2'>
+            <openInterval start='0' close='1'/>
+        </lane>
+        <lane i='2' j='-1'>
+            <openInterval start='0' close='1'/>
+        </lane>
+        <lane i='1' j='-2'>
+            <openInterval start='0' close='1'/>
+        </lane>
+        <lane i='1' j='-2'>
+            <openInterval start='0' close='1'/>
+        </lane>
+        <laneInfo>
+            <lane i="1" j="0" info="0-1"/>
+            <lane i="-1" j="0" info="0-1"/>
+            <lane i="0" j="-1" info="0-1"/>
+            <lane i="0" j="1" info="0-1"/>
+            <lane i="1" j="-1" info="0-1"/>
+            <lane i="-1" j="1" info="0-1"/>
+            <lane i="0" j="0" info="0-1"/>
+            <lane i="2" j="0" info="0-1"/>
+            <lane i="-2" j="0" info="0-1"/>
+            <lane i="0" j="-2" info="0-1"/>
+            <lane i="0" j="2" info="0-1"/>
+            <lane i="2" j="-2" info="0-1"/>
+            <lane i="-2" j="2" info="0-1"/>
+            <lane i="1" j="1" info="0-1"/>
+            <lane i="-1" j="-1" info="0-1"/>
+            <lane i="-1" j="2" info="0-1"/>
+            <lane i="-2" j="1" info="0-1"/>
+            <lane i="1" j="-2" info="0-1"/>
+            <lane i="2" j="-1" info="0-1"/>
+        </laneInfo>       
+    </Road>
+
+    <Ramp id="one_out">
+        <connectedPart type="in">
+            <roadID value="road_one"/>
+            <i value="2"/>
+            <j value="0"/>
+            <t value="0.9"/>
+        </connectedPart>
+        <controlPoints type="Bezier" n="101">
+            <point coord="(900,480,100)"/>
+            <point coord="(1000,200,100)"/>
+        </controlPoints>
+    </Ramp>
+
+</DroneRoadSystem>
+
+
+
+
+
