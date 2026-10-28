@@ -18,6 +18,8 @@
 
 #include "inet/common/INETMath.h"
 #include "DroneLinearMobility.h"
+#include <algorithm>
+#include <cmath>
 
 using namespace inet;
 
@@ -47,6 +49,8 @@ void DroneLinearMobility::initialize(int stage)
         gatePIn = gate("pIn");
 
         speed = par("speed");
+        if (!std::isfinite(speed) || speed < 0)
+            throw cRuntimeError("DroneLinearMobility: speed must be nonnegative and finite");
         stationary = (speed == 0);
         rad heading = deg(fmod(par("initialMovementHeading").doubleValue(), 360));
         rad elevation = deg(fmod(par("initialMovementElevation").doubleValue(), 360));
@@ -62,6 +66,8 @@ void DroneLinearMobility::initialize(int stage)
         lastUpdate = simTime();
         recordPosition = new cMessage("recordPosition");
         recordPositionPeriod = par("recordPositionPeriod");
+        if (recordPositionPeriod <= SIMTIME_ZERO)
+            throw cRuntimeError("DroneLinearMobility: recordPositionPeriod must be positive");
         lastSetSpeed = 0;
         scheduleAt(simTime() + recordPositionPeriod, recordPosition);
         rs = check_and_cast<RoadSystem *>(getParentModule()->getParentModule()->getSubmodule("roadSystem"));
@@ -76,11 +82,13 @@ void DroneLinearMobility::initialize(int stage)
     }
 }
 void DroneLinearMobility::updateCurrentTInfo() {
+    if (currentPartSize <= 0 || n < 0 || n > currentPartSize)
+        throw cRuntimeError("DroneLinearMobility: invalid waypoint index");
     currentSLength = 0;
     baseT = (double)n/(double)currentPartSize;
     baseNextT = (double)(n+1)/(double)currentPartSize;
     currentT = baseT;
-    if (n!= currentPartSize) currentTotalSLength = rs->getSLength(currentPart, Lane(currentI, currentJ), n);
+    currentTotalSLength = n < currentPartSize ? rs->getSLength(currentPart, Lane(currentI, currentJ), n) : 0;
 
 }
 
@@ -134,7 +142,6 @@ void DroneLinearMobility::takeNewTarget(Vector3d v, double nt, double tt) {
     __thisTargetT = tt;
     __nextTarget = v;
     __nextT = nt;
-    if (__nextT == 1) __nextT == 0.99;
 }
 
 double DroneLinearMobility::getCurrentT() {
@@ -142,10 +149,12 @@ double DroneLinearMobility::getCurrentT() {
 }
 
 void DroneLinearMobility::updateCurrentT(double time) {
-    currentSLength = currentSLength + time * speed;
-    currentT = baseT + (baseNextT - baseT) * (currentSLength / currentTotalSLength);
-    if ((currentSLength / currentTotalSLength) >= 0.99)  currentT = baseT + (baseNextT - baseT) * 0.99;
-    if (n == currentPartSize) currentT = 1;
+    if (n >= currentPartSize) { currentT = 1; return; }
+    if (currentTotalSLength <= 0)
+        throw cRuntimeError("DroneLinearMobility: segment length must be positive");
+    currentSLength += std::max(0.0, time) * speed;
+    const double fraction = std::min(0.99, currentSLength / currentTotalSLength);
+    currentT = baseT + (baseNextT - baseT) * fraction;
 
 }
 
@@ -288,6 +297,8 @@ bool DroneLinearMobility::isArrival()
 
 void DroneLinearMobility::setSpeed(double speed)
 {
+    if (!std::isfinite(speed) || speed < 0)
+        throw cRuntimeError("DroneLinearMobility: speed must be nonnegative and finite");
 
 
     if (sent_to_rs and speed != 0) {

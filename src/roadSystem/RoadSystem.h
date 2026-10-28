@@ -48,7 +48,7 @@ public:
     std::map<std::string, RoadPart*> getRoadParts();
     void addConnects(int fromi, int fromj, int toi, int toj, std::string from_id, std::string to_id, double fromt, double tot);
     std::string getConnectStr();
-    MatrixXd getLaneCoord(Lane lane, std::string id);
+    const MatrixXd& getLaneCoord(Lane lane, std::string id) const;
     std::vector<Lane> getNeighborLane(Lane lane, std::string id, double t, int mode);
     std::vector<Lane> getNeighborLane(Lane lane, std::string id, double t);
     std::vector<Lane> getNeighborLane(Lane lane, std::string id);
@@ -95,6 +95,8 @@ private:
     std::map<std::string, std::map<Lane, VectorXd>> laneSLengths;
     std::map<std::string, std::map<Lane, double>> laneLengths;
     std::map<std::string, std::map<Lane, bool>> laneBlocks;
+    // Arc-length prefix sums, indexed by waypoint.
+    std::map<std::string, std::map<Lane, VectorXd>> laneCumulativeLengths;
     double E_BLOCK = 50;
 };
 

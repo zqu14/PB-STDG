@@ -24,6 +24,7 @@
 #include <inet/common/geometry/common/Coord.h>
 #include <inet/common/geometry/common/EulerAngles.h>
 #include <algorithm>
+#include <cmath>
 #include "../base/BeaconingBase.h"
 #include "../base/Beacon_m.h"
 #include "../neighbortable/PacketLossEstimator.h"
@@ -68,15 +69,15 @@ class Processor : public cSimpleModule {
         cGate* gateMIn = nullptr;
         cGate* gateToRB = nullptr;
 
-        NeighborTable*  nbTable;
+        NeighborTable*  nbTable = nullptr;
         std::map<NodeIdentifier, int> nbSeqTable;
         std::map<NodeIdentifier, int> nblostTable;
 
         int        gidBeaconsIn;
         NodeIdentifier  ownIdentifier;
-        DroneLinearMobility *mobility;
-        RenewalBeaconing *rb;
-        cMessage  *startPlan;
+        DroneLinearMobility *mobility = nullptr;
+        RenewalBeaconing *rb = nullptr;
+        cMessage  *startPlan = nullptr;
 
         double preferredSpeed;
         double maxSpeed;
@@ -147,8 +148,13 @@ class Processor : public cSimpleModule {
         double getBeaconAmount() {return beaconRecTotal;};
         double getSeqGap() {return beaconSeqGap;};
 
-        double getItSpeed(MacAddress it) {if ((*nbTable)[it].getIsSwitching()) return sqrt(pow((*nbTable)[it].getLastVelocity().length(),2)-100);
-        return (*nbTable)[it].getLastVelocity().length();};
+        double getItSpeed(MacAddress it) {
+            const auto& neighbor = (*nbTable)[it];
+            const double speed = neighbor.getLastVelocity().length();
+            if (!neighbor.getIsSwitching()) return speed;
+            return std::sqrt(std::max(0.0, speed * speed - 100.0));
+        }
+
 
         //------------------------------------------------------------------------------------------------------------------------------------------------------------
         //---------------------                    cooperation base Algorithm Part                                                                  --------------------
@@ -223,7 +229,7 @@ class Processor : public cSimpleModule {
          * Calculate the speed cost of the given lane l, if there is no ahead drone return 0
          */
         double getSpeedCost(Lane l);
-        double getSpeedCost(Lane l, std::map<MacAddress, double> dm, double pSpeed, NodeIdentifier competitor);
+        double getSpeedCost(Lane l, const std::map<MacAddress, double>& dm, double pSpeed, NodeIdentifier competitor);
 
         /***
          * Update the candidate nodes list, include neighbor drones and drones in neighbor's neighbor lane.

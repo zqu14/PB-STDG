@@ -50,10 +50,10 @@ class DroneLinearMobility : public MovingMobilityBase
     std::vector<Vector3d> SWITCH_PATH;
     int SWITCH_INDEX = 0;
     bool IS_SWTICHING = false;
-    double __thisTargetT;
+    double __thisTargetT = 9999;
     double speed;
     Coord direction;
-    cMessage* recordPosition;
+    cMessage* recordPosition = nullptr;
     simtime_t recordPositionPeriod;
     double lastSetSpeed;
     int n=0;

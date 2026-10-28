@@ -113,6 +113,9 @@ void Processor::initialize (int stage)
 
 
 void Processor::setNextRun(double time) {
+    if (!std::isfinite(time) || time < 0)
+        throw cRuntimeError("Processor: delay must be nonnegative and finite");
+    if (startPlan->isScheduled()) cancelEvent(startPlan);
     scheduleAt(simTime()+time, startPlan);
     rb->setAlgorithmTime(simTime().dbl()+time);
 }
@@ -213,7 +216,7 @@ AlgorithmOutput Processor::findNextLane() {
         return output;
     }
     if (std::find(nextLs.begin(), nextLs.end(), Lane(currentI, currentJ)) != nextLs.end()) return output;
-    int randomIndex = floor(par("random01").doubleValue()*nextLs.size());
+    int randomIndex = std::min(static_cast<int>(nextLs.size()) - 1, std::max(0, static_cast<int>(par("random01").doubleValue()*nextLs.size())));
     output.speed = preferredSpeed - _speedDiffs[randomIndex];
     output.l = nextLs[randomIndex];
     return output;
@@ -1207,7 +1210,7 @@ double Processor::getPositionCost(Lane l, double currT, double targetT, Lane cur
 }
 
 
-double Processor::getSpeedCost(Lane l, std::map<MacAddress, double> dm, double pSpeed, NodeIdentifier competitor) {
+double Processor::getSpeedCost(Lane l, const std::map<MacAddress, double>& dm, double pSpeed, NodeIdentifier competitor) {
     double cost = 0;
     double minDis = MAX;
     Lane targetLane = rp.getFromLane();

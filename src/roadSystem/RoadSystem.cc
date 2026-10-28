@@ -15,14 +15,19 @@
 
 #include "RoadSystem.h"
 #include <cstring>
+#include <algorithm>
+#include <cmath>
+#include <limits>
 Define_Module(RoadSystem);
 
 void RoadSystem::initialize() {
     E_BLOCK  = par("E_BLOCK");
+    if (!std::isfinite(E_BLOCK) || E_BLOCK <= 0)
+        throw cRuntimeError("RoadSystem: E_BLOCK must be positive and finite");
 }
 
-MatrixXd RoadSystem::getLaneCoord(Lane lane, std::string id) {
-    return laneCoords[id][lane];
+const MatrixXd& RoadSystem::getLaneCoord(Lane lane, std::string id) const {
+    return laneCoords.at(id).at(lane);
 }
 
 std::vector<Lane> RoadSystem::getNeighborLane(Lane lane, std::string id, double t, int mode) {
@@ -124,8 +129,10 @@ std::vector< std::vector<std::string> > RoadSystem::getPaths(std::string start, 
 RoadPath RoadSystem::getRoadPath(std::string start, std::string end) {
     std::map<std::string,double> searched;
     std::vector<std::vector<std::string>> paths =  getPaths(start,end,0, searched);
+    if (paths.empty())
+        throw cRuntimeError("RoadSystem: no route from %s to %s", start.c_str(), end.c_str());
     RoadPath shortest;
-    double shortestLength = 99999;
+    double shortestLength = std::numeric_limits<double>::infinity();
     for (auto&path : paths) {
         RoadPath roadPath;
         bool is_first_node = true;
@@ -284,17 +291,22 @@ void RoadSystem::setRadius(double r) {
 //---------------------------new code without test -------------------------------------------------------------------------------------------------------------------
 
 double RoadSystem::getSLength(std::string id, Lane l, int n) {
-    return laneSLengths[id][l][n];
+    const auto& lengths = laneSLengths.at(id).at(l);
+    if (n < 0 || n >= lengths.size())
+        throw cRuntimeError("RoadSystem: segment index out of range");
+    return lengths[n];
 }
 
 
 void RoadSystem::addRoadPart(std::string id, RoadPart* r) {
     roadParts[id] = r;
     std::map<Lane, MatrixXd> m;
+    const MatrixXd center = r->getCurve();
+    const MatrixXd e1 = r->getE1();
+    const MatrixXd e2 = r->getE2();
+    if (center.rows() < 2)
+        throw cRuntimeError("RoadSystem: at least two waypoints are required");
     for(auto &i : r->getLanes()) {
-        MatrixXd center = r->getCurve();
-        MatrixXd e1 = r->getE1();
-        MatrixXd e2 = r->getE2();
         Lane l = i.first;
         if (l == Lane(0,0)) m[l] = center;
         else m[l] = center.array() + e1.array()*l.getI()*this->r + e2.array()*l.getJ()*this->r;
@@ -309,13 +321,20 @@ void RoadSystem::addRoadPart(std::string id, RoadPart* r) {
         Lane l = i.first;
         int rows = i.second.rows();
         VectorXd slengths(rows-1);
+        VectorXd cumulative(rows);
+        cumulative(0) = 0;
         for (int j=0;j<rows-1;j++) {
             Vector3d from =  i.second.row(j);
             Vector3d to =  i.second.row(j+1);
             Vector3d dis = to.array() - from.array();
-            totalLength = totalLength + dis.norm();
-            slengths(j) = dis.norm();
+            const double length = dis.norm();
+            if (!std::isfinite(length) || length <= 0)
+                throw cRuntimeError("RoadSystem: zero or invalid lane segment");
+            totalLength += length;
+            slengths(j) = length;
+            cumulative(j+1) = totalLength;
         }
+        laneCumulativeLengths[id][l] = cumulative;
         m2[l] = slengths;
         m3[l] = totalLength;
         m4[l] = false;
@@ -336,7 +355,10 @@ void RoadSystem::addRoadPart(std::string id, RoadPart* r) {
 
 
 Vector3d RoadSystem::getNeighborPoint(std::string id, Lane l1, Lane l2, double t) {
-    int total = roadParts[id]->getCurve().rows()-1;
+    if (!std::isfinite(t) || t < 0 || t > 1)
+        throw cRuntimeError("RoadSystem: interpolation t must be in [0, 1]");
+    int total = getLaneCoord(l2, id).rows()-1;
+    if (t == 1) return getWayPoint(total, id, l2);
     int currentN = floor(total * t);
     Vector3d ToLaneFloorCoord = getWayPoint(currentN, id, l2);
     Vector3d ToLaneNextCoord = getWayPoint(currentN+1, id, l2);
@@ -517,7 +539,10 @@ std::vector<EntryInfo> RoadSystem::getAllEntry() {
 
 
 Vector3d RoadSystem::getWayPoint(int n, std::string id, Lane l) {
-    return getLaneCoord(l, id).row(n);
+    const auto& coords = getLaneCoord(l, id);
+    if (n < 0 || n >= coords.rows())
+        throw cRuntimeError("RoadSystem: waypoint index out of range");
+    return coords.row(n);
 }
 
 
@@ -641,48 +666,32 @@ Vector3d RoadSystem::getRF2() {
 }
 
 double RoadSystem::getDistance(std::string id, Lane l, double t1, double t2) {
+    // End-of-route callers pass -9999 as t2: retain the reverse-distance sentinel.
     if (t1 > t2) return -9999;
-    int size = getLaneCoord(l, id).rows() - 1;
-    int n1 = floor(t1 * size);
-    int n2 = floor(t2 * size);
-    double t = t1;
-    double tUp = (double) (n1+1) / (double) size;
-    double tDown = (double) n1 / (double) size;
-    double d = 0;
-    while(n1 != n2) {
-        double p = 1 - ((t - tDown) / (tUp - tDown));
-        try{
-            //std::cout << id << "  " << l.getI() << "  " << l.getJ() << "  " << n1 << "  " << t1 << "   " <<   t2 << endl;
-            d = d + laneSLengths[id][l][n1] * p;
-        } catch (std::exception e){
-
-        };
-        n1++;
-        t = (double) n1 / (double) size;
-        tUp = (double) (n1+1) / (double) size;
-        tDown = t;
-    }
-    double p = (t2 - t) / (tUp - tDown);
-    if (n1 == size) return d;
-    d = d + laneSLengths[id][l][n1] * p;
-    return d;
+    if (!std::isfinite(t1) || !std::isfinite(t2) || t1 < 0 || t1 > 1 || t2 < 0 || t2 > 1)
+        throw cRuntimeError("RoadSystem: distance parameters must be in [0, 1]");
+    const auto& cumulative = laneCumulativeLengths.at(id).at(l);
+    const int segments = cumulative.size() - 1;
+    auto distanceAt = [&](double t) -> double {
+        if (t >= 1) return cumulative[segments];
+        const double scaled = t * segments;
+        const int n = std::min(segments - 1, static_cast<int>(scaled));
+        return cumulative[n] + (scaled - n) * (cumulative[n+1] - cumulative[n]);
+    };
+    return distanceAt(t2) - distanceAt(t1);
 }
 
-
 double RoadSystem::getT(std::string id, Lane l, double dis) {
-    int size = getLaneCoord(l, id).rows() - 1;
-    int n = 0;
-    double left = 0;
-    while (n <= size) {
-        dis -= laneSLengths[id][l][n];
-        if (dis >= 0) {
-            n++;
-        } else {
-            left = (dis + laneSLengths[id][l][n]) / ( laneSLengths[id][l][n] * (double) size);
-            break;
-        }
-    }
-    return (double) n / (double) size + left;
+    if (!std::isfinite(dis))
+        throw cRuntimeError("RoadSystem: distance must be finite");
+    const auto& cumulative = laneCumulativeLengths.at(id).at(l);
+    const int segments = cumulative.size() - 1;
+    if (dis <= 0) return 0;
+    if (dis >= cumulative[segments]) return 1;
+    const double* begin = cumulative.data();
+    const int n = static_cast<int>(std::upper_bound(begin, begin + cumulative.size(), dis) - begin) - 1;
+    const double fraction = (dis - cumulative[n]) / (cumulative[n+1] - cumulative[n]);
+    return (n + fraction) / segments;
 }
 
 
